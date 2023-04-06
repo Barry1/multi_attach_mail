@@ -15,6 +15,8 @@ from valuefragments import memoize
 
 infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
 
+_ATTACHMENTFOLDER = "attachments"
+
 
 @memoize
 def read_cfg() -> dict[str, str]:
@@ -39,15 +41,15 @@ async def mailmessagewithfile(
     mailreceipient: str, mailsubject: str, attachmentfilename: str
 ) -> None:
     """Create an Email with the attachment and send."""
-    print("Start")
+    #    print("Start")
     smtp_creds = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
     mailmessage["Subject"] = mailsubject
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
-    print(attachmentfilename)
-    with open(attachmentfilename, "rb") as _theattachment:
+    #    print(attachmentfilename)
+    with open(_ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb") as _theattachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(_theattachment.read())
     encoders.encode_base64(part)
@@ -68,7 +70,9 @@ async def mailmessagewithfile(
             recipients=mailreceipient,
             message=mailmessage.as_string(),
         )
-    print("END")
+
+
+#    print("END")
 
 
 async def mainmethod():
@@ -76,13 +80,16 @@ async def mainmethod():
     RECEIPIENT = "bastian.ebeling@gmail.com"
     SUBJECT = "Email with attachment"
     attachmentstosend = [
-        f"attachments{os.sep}{attachmenttosend}"
-        for attachmenttosend in os.listdir("attachments")
+        attachmenttosend
+        for attachmenttosend in os.listdir(_ATTACHMENTFOLDER)
         if attachmenttosend != ".PUT_YOUR_ATTACHMENTS_HERE"
     ]
+    attachmentcount: int = len(attachmentstosend)
     coroutines = [
-        mailmessagewithfile(RECEIPIENT, SUBJECT, theattachment)
-        for theattachment in attachmentstosend
+        mailmessagewithfile(
+            RECEIPIENT, f"{SUBJECT} {idx}/{attachmentcount}", theattachment
+        )
+        for idx, theattachment in enumerate(attachmentstosend, start=1)
     ]
     await asyncio.gather(*coroutines)
 
