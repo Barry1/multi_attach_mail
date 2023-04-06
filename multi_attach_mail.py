@@ -1,7 +1,6 @@
 """send attachments"""
 import asyncio
 import os
-import ssl
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
