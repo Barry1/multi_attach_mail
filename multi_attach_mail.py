@@ -5,6 +5,7 @@ import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
+from typing import TypedDict
 
 import yaml
 from aiosmtplib import SMTP
@@ -18,8 +19,17 @@ infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
 _ATTACHMENTFOLDER = "attachments"
 
 
+class SMTPCFG(TypedDict):
+    """Just a Type-Class for the configuration."""
+
+    smtp_server: str
+    smtp_port: int
+    smtp_user: str
+    smtp_password: str
+
+
 @memoize
-def read_cfg() -> dict[str, str]:
+def read_cfg() -> SMTPCFG:
     """Read configuration from smtpcred.yaml"""
     try:
         with open("smtpcred.yaml", "r") as cfgfile:
