@@ -1,4 +1,5 @@
 """send attachments"""
+import os
 import smtplib
 import ssl
 import sys
@@ -63,6 +64,13 @@ def mailmessagewithfile(
 
 
 if __name__ == "__main__":
-    mailmessagewithfile(
-        "bastian.ebeling@web.de", "Test-Email mit Anhang", "multi_attach_mail.py"
-    )
+    RECEIPIENT = "bastian.ebeling@gmail.com"
+    SUBJECT = "Email with attachment"
+    attachmentstosend = [
+        attachmenttosend
+        for attachmenttosend in os.listdir("attachments")
+        if attachmenttosend != ".PUT_YOUR_ATTACHMENTS_HERE"
+    ]
+    for theattachment in attachmentstosend:
+        mailmessagewithfile(RECEIPIENT, SUBJECT, theattachment)
+        print(theattachment)
