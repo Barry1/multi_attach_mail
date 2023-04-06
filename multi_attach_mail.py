@@ -1,16 +1,15 @@
 """send attachments"""
 import asyncio
 import os
-
-# import smtplib
 import ssl
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
-import aiosmtplib
 import yaml
+from aiosmtplib import SMTP
+from valuefragments import memoize
 
 # from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
@@ -18,6 +17,7 @@ import yaml
 infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
 
 
+@memoize
 def read_cfg() -> dict[str, str]:
     """read configuration from smtpcred.yaml"""
     try:
@@ -36,16 +36,18 @@ def read_cfg() -> dict[str, str]:
         raise
 
 
-def mailmessagewithfile(
+async def mailmessagewithfile(
     mailreceipient: str, mailsubject: str, attachmentfilename: str
 ) -> None:
     """Create an Email with the attachment and send."""
+    print("Start")
     smtp_creds = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
     mailmessage["Subject"] = mailsubject
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
+    print(attachmentfilename)
     with open(attachmentfilename, "rb") as _theattachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(_theattachment.read())
@@ -54,26 +56,37 @@ def mailmessagewithfile(
         "Content-Disposition", f"attachment; filename= {attachmentfilename}"
     )
     mailmessage.attach(part)
-    thesslcontext = ssl.create_default_context()
-    with smtplib.SMTP_SSL(
-        smtp_creds["smtp_server"], smtp_creds["smtp_port"], context=thesslcontext
+    async with SMTP(
+        hostname=smtp_creds["smtp_server"],
+        port=smtp_creds["smtp_port"],
+        username=smtp_creds["smtp_user"],
+        password=smtp_creds["smtp_password"],
+        start_tls=False,
+        use_tls=True,
     ) as send_server:
-        send_server.login(smtp_creds["smtp_user"], smtp_creds["smtp_password"])
-        send_server.sendmail(
-            from_addr=smtp_creds["smtp_user"],
-            to_addrs=mailreceipient,
-            msg=mailmessage.as_string(),
+        await send_server.sendmail(
+            sender=smtp_creds["smtp_user"],
+            recipients=mailreceipient,
+            message=mailmessage.as_string(),
         )
+    print("END")
 
 
-if __name__ == "__main__":
+async def mainmethod():
+    """async method for the main task"""
     RECEIPIENT = "bastian.ebeling@gmail.com"
     SUBJECT = "Email with attachment"
     attachmentstosend = [
-        attachmenttosend
+        f"attachments{os.sep}{attachmenttosend}"
         for attachmenttosend in os.listdir("attachments")
         if attachmenttosend != ".PUT_YOUR_ATTACHMENTS_HERE"
     ]
-    for theattachment in attachmentstosend:
+    coroutines = [
         mailmessagewithfile(RECEIPIENT, SUBJECT, theattachment)
-        print(theattachment)
+        for theattachment in attachmentstosend
+    ]
+    await asyncio.gather(*coroutines)
+
+
+if __name__ == "__main__":
+    asyncio.run(mainmethod())
