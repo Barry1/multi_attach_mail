@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "multi-attach-mail"
+version = "0.1.0"
+description = ""
+authors = ["Dr. Bastian Ebeling <230051+Barry1@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "multi_attach_mail"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pylint = "^2.17.2"
+pylama = "^8.4.1"
+pyright = "^1.1.302"
+pyre-check = "^0.9.18"
+autopep8 = "^2.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
