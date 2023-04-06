@@ -1,13 +1,14 @@
 """send attachments"""
 import smtplib
 import ssl
+import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import yaml
 
+# from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
 
 infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
@@ -15,8 +16,20 @@ infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
 
 def read_cfg() -> dict[str, str]:
     """read configuration from smtpcred.yaml"""
-    with open("smtpcred.yaml", "r") as cfgfile:
-        return yaml.safe_load(cfgfile)
+    try:
+        with open("smtpcred.yaml", "r") as cfgfile:
+            return yaml.safe_load(cfgfile)
+    except FileNotFoundError:
+        print(
+            "ERROR: smtpcred.yaml was not found, I created a template, please fill.",
+            file=sys.stderr,
+        )
+        with open("smtpcred.yaml", "x") as cfgfile:
+            print("smtp_server : YOURSMTPSERVER", file=cfgfile)
+            print("smtp_port : YOURSMTPSSLSERVERPORT465", file=cfgfile)
+            print("smtp_user : YOURSMTPUSERNAME", file=cfgfile)
+            print("smtp_password : YOURSMTPPASSWORD ", file=cfgfile)
+        raise
 
 
 def mailmessagewithfile(
