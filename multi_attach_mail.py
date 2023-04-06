@@ -19,7 +19,7 @@ infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
 
 @memoize
 def read_cfg() -> dict[str, str]:
-    """read configuration from smtpcred.yaml"""
+    """Read configuration from smtpcred.yaml"""
     try:
         with open("smtpcred.yaml", "r") as cfgfile:
             return yaml.safe_load(cfgfile)
