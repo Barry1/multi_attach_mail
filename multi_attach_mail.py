@@ -1,12 +1,15 @@
 """send attachments"""
+import asyncio
 import os
-import smtplib
+
+# import smtplib
 import ssl
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
+import aiosmtplib
 import yaml
 
 # from email.mime.text import MIMEText
@@ -43,9 +46,9 @@ def mailmessagewithfile(
     mailmessage["Subject"] = mailsubject
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
-    with open(attachmentfilename, "rb") as theattachment:
+    with open(attachmentfilename, "rb") as _theattachment:
         part = MIMEBase("application", "octet-stream")
-        part.set_payload(theattachment.read())
+        part.set_payload(_theattachment.read())
     encoders.encode_base64(part)
     part.add_header(
         "Content-Disposition", f"attachment; filename= {attachmentfilename}"
