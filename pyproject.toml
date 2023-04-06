@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Dr. Bastian Ebeling <230051+Barry1@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "multi_attach_mail"}]
+packages = [{ include = "multi_attach_mail" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"

@@ -1,11 +1,12 @@
 """send attachments"""
 import smtplib
 import ssl
-import yaml
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+import yaml
 
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
 
@@ -49,4 +50,6 @@ def mailmessagewithfile(
 
 
 if __name__ == "__main__":
-    mailmessagewithfile("bastian.ebeling@web.de", "Test-Email mit Anhang", "multi_attach_mail.py")
+    mailmessagewithfile(
+        "bastian.ebeling@web.de", "Test-Email mit Anhang", "multi_attach_mail.py"
+    )
