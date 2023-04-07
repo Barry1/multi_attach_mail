@@ -858,7 +858,7 @@ typing-extensions = ">=3.7.4"
 
 [[package]]
 name = "valuefragments"
-version = "0.2.5"
+version = "0.2.6"
 description = "Testing installation of Package"
 category = "main"
 optional = false
@@ -876,7 +876,7 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "2e125f4bc8f7c814756736b0ab6ae415cbc1784b"
+resolved_reference = "63ce47d9358429b643d4bc7fbbb9ff47f61f0075"
 
 [[package]]
 name = "wrapt"
