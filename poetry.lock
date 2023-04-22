@@ -876,7 +876,7 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "556d837e99961a1d90985e1877f794da8a944a4e"
+resolved_reference = "9650124f914a93ca1175bbc7da00773fc0ad814d"
 
 [[package]]
 name = "wrapt"
