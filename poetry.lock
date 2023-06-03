@@ -2,13 +2,13 @@
 
 [[package]]
 name = "aiosmtplib"
-version = "2.0.1"
+version = "2.0.2"
 description = "asyncio SMTP client"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "aiosmtplib-2.0.1-py3-none-any.whl", hash = "sha256:2f619f900d1bfe25a8f453005958ba78870abbfeeffb2fdef11265be0df26913"},
-    {file = "aiosmtplib-2.0.1.tar.gz", hash = "sha256:a20aae28f67169dd761beef4c62e4bb3073d035f9ee20c2e4f18baa1a73e7c88"},
+    {file = "aiosmtplib-2.0.2-py3-none-any.whl", hash = "sha256:1e631a7a3936d3e11c6a144fb8ffd94bb4a99b714f2cb433e825d88b698e37bc"},
+    {file = "aiosmtplib-2.0.2.tar.gz", hash = "sha256:138599a3227605d29a9081b646415e9e793796ca05322a78f69179f0135016a3"},
 ]
 
 [package.extras]
