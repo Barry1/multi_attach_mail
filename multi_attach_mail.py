@@ -52,7 +52,8 @@ async def mailmessagewithfile(
 ) -> None:
     """Create an Email with the attachment and send."""
     #    print("Start")
-    smtp_creds = read_cfg()
+    print(f"Sending {attachmentfilename} to {mailreceipient}")
+    smtp_creds: SMTPCFG = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
     mailmessage["Subject"] = mailsubject
@@ -82,14 +83,12 @@ async def mailmessagewithfile(
         )
 
 
-#    print("END")
-
-
-async def mainmethod():
+async def mainmethod() -> None:
     """async method for the main task"""
-    RECEIPIENT = "bastian.ebeling@gmail.com"
-    SUBJECT = "Email with attachment"
-    attachmentstosend = [
+    print(sys.argv)
+    RECEIPIENT: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
+    SUBJECT: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
+    attachmentstosend: list[str] = [
         attachmenttosend
         for attachmenttosend in os.listdir(_ATTACHMENTFOLDER)
         if attachmenttosend != ".PUT_YOUR_ATTACHMENTS_HERE"
