@@ -536,13 +536,13 @@ typing-inspect = "*"
 
 [[package]]
 name = "pyright"
-version = "1.1.329"
+version = "1.1.330"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.329-py3-none-any.whl", hash = "sha256:c16f88a7ac14ddd0513e62fec56d69c37e3c6b412161ad16aa23a9c7e3dabaf4"},
-    {file = "pyright-1.1.329.tar.gz", hash = "sha256:5baf82ff5ecb8c8b3ac400e8536348efbde0b94a09d83d5b440c0d143fd151a8"},
+    {file = "pyright-1.1.330-py3-none-any.whl", hash = "sha256:d4b0e7341579c528067f89529440a1b73457137205452cf5a6d1615eac60f3fd"},
+    {file = "pyright-1.1.330.tar.gz", hash = "sha256:6a0652ef09a59bd1d427955bc2ddcc71ee45478b9b50fcbf1c25b49f1e6b0250"},
 ]
 
 [package.dependencies]
@@ -764,7 +764,7 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "c6c22257cc82e0dcb8e4075352ba04b20e1fc7a7"
+resolved_reference = "4df79d74832fe02c0a5a5e7ce6582fa18c846b5a"
 
 [metadata]
 lock-version = "2.0"
