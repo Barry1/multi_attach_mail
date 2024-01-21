@@ -776,7 +776,7 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "1729c41fceaca0d070740e5bbdafcef5cb233df3"
+resolved_reference = "07acf84cc60e5ab36c0c3fd5b288d6bd3b8391d7"
 
 [metadata]
 lock-version = "2.0"
