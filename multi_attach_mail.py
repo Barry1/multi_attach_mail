@@ -33,14 +33,15 @@ class SMTPCFG(TypedDict):
 def read_cfg() -> SMTPCFG:
     """Read configuration from smtpcred.yaml"""
     try:
-        with open("smtpcred.yaml", "r") as cfgfile:
+        with open("smtpcred.yaml", "r", encoding="ascii") as cfgfile:
             return yaml.safe_load(cfgfile)
     except FileNotFoundError:
         print(
-            "ERROR: smtpcred.yaml was not found, I created a template, please fill.",
+            "ERROR: smtpcred.yaml was not found,",
+            "I created a template, please fill.",
             file=sys.stderr,
         )
-        with open("smtpcred.yaml", "x") as cfgfile:
+        with open("smtpcred.yaml", "x", encoding="ascii") as cfgfile:
             print("smtp_server : YOURSMTPSERVER", file=cfgfile)
             print("smtp_port : YOURSMTPSSLSERVERPORT465", file=cfgfile)
             print("smtp_user : YOURSMTPUSERNAME", file=cfgfile)
