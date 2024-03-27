@@ -39,7 +39,7 @@ env:
 
   #  PYRIGHT_PYTHON_FORCE_VERSION: latest
 
-  PRE_COMMANDS: "[{'command': 'echo Hallo', 'cwd': 'root'}]"
+  PRE_COMMANDS: '[{"command": "echo Hallo", "cwd": "root"}]'
 #{'PRE_COMMANDS': [{'command': 'echo Hallo', 'cwd': 'root'}]}
 
 #    - command: echo Hallo
