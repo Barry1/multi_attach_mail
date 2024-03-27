@@ -1,3 +1,6 @@
+NUMCPUS:=$(shell getconf _NPROCESSORS_ONLN)
+MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
+
 test:
 	poetry run python multi_attach_mail.py bastian.ebeling@gmail.com Testbetreff
 
