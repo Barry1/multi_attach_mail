@@ -11,7 +11,7 @@ lint:
     - bandit@1.7.8
     - checkov@3.2.47
     - osv-scanner@1.7.0
-    - trivy@0.50.0
+    - trivy@0.50.1
     - trufflehog@3.71.0
     - black@24.3.0
     - git-diff-check

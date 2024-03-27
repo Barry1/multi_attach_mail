@@ -1,4 +1,4 @@
-"""send attachments"""
+"""Send attachments."""
 
 import asyncio
 import os
@@ -31,7 +31,7 @@ class SMTPCFG(TypedDict):
 
 @memoize
 def read_cfg() -> SMTPCFG:
-    """Read configuration from smtpcred.yaml"""
+    """Read configuration from smtpcred.yaml."""
     try:
         with open("smtpcred.yaml", "r", encoding="ascii") as cfgfile:
             return yaml.safe_load(cfgfile)
@@ -88,7 +88,7 @@ async def mailmessagewithfile(
 
 
 async def mainmethod() -> None:
-    """async method for the main task"""
+    """Async method for the main task."""
     print(sys.argv)
     therecipient: str = (
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"

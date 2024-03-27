@@ -405,6 +405,7 @@ files = [
 
 [package.dependencies]
 snowballstemmer = ">=2.2.0"
+tomli = {version = ">=1.2.3", optional = true, markers = "python_version < \"3.11\" and extra == \"toml\""}
 
 [package.extras]
 toml = ["tomli (>=1.2.3)"]
@@ -770,9 +771,9 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "075dd7bb51dc908269cbea533285624056ee0122"
+resolved_reference = "608cacf6286e355287c92b3467eb49a3c90e3e03"
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a1a19d13f83051e815acdcbd1089c0a7eff0092221cc5708af2df958e584a7e2"
+content-hash = "465f9cf17611eb58c3ef5521ca0f0f0462ffd7319b7aec927919ae209285a3cc"

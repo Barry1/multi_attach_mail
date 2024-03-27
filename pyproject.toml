@@ -24,6 +24,15 @@ autopep8 = ">=2"
 mypy = "^1.1.1"
 types-pyyaml = "^6.0.12.9"
 
+[tool.poetry.group.dev.dependencies.pydocstyle]
+extras = ["toml"]
+version = "^6.3.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylama]
+verbose = true
+#linters = "mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,isort"
+linters = "mccabe,mypy,pycodestyle,pyflakes,pylint,isort"
