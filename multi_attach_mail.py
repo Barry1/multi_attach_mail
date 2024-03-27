@@ -1,4 +1,5 @@
 """send attachments"""
+
 import asyncio
 import os
 import sys
@@ -60,7 +61,9 @@ async def mailmessagewithfile(
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
     #    print(attachmentfilename)
-    with open(_ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb") as _theattachment:
+    with open(
+        _ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb"
+    ) as _theattachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(_theattachment.read())
     encoders.encode_base64(part)
@@ -76,17 +79,19 @@ async def mailmessagewithfile(
         start_tls=False,
         use_tls=True,
     ) as send_server:
-        await send_server.sendmail(
+        await send_server.send_message(
+            mailmessage,
             sender=smtp_creds["smtp_user"],
             recipients=mailreceipient,
-            message=mailmessage.as_string(),
         )
 
 
 async def mainmethod() -> None:
     """async method for the main task"""
     print(sys.argv)
-    RECEIPIENT: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
+    RECEIPIENT: str = (
+        sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
+    )
     SUBJECT: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[str] = [
         attachmenttosend
