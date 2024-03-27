@@ -35,7 +35,7 @@ env:
   APPLY_FIXES_MODE: commit
 
   PRE_COMMANDS: >-
-    - command: python -m -pip install --upgrade poetry poetry-plugin-export
+    - command: python -m pip install --upgrade poetry poetry-plugin-export
       cwd: root
     - command: poetry export > requirements.txt
       cwd: root
