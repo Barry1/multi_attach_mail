@@ -90,10 +90,10 @@ async def mailmessagewithfile(
 async def mainmethod() -> None:
     """async method for the main task"""
     print(sys.argv)
-    RECEIPIENT: str = (
+    therecipient: str = (
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     )
-    SUBJECT: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
+    thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[str] = [
         attachmenttosend
         for attachmenttosend in os.listdir(_ATTACHMENTFOLDER)
@@ -102,7 +102,9 @@ async def mainmethod() -> None:
     attachmentcount: int = len(attachmentstosend)
     coroutines = [
         mailmessagewithfile(
-            RECEIPIENT, f"{SUBJECT} {idx}/{attachmentcount}", theattachment
+            therecipient,
+            f"{thesubject} {idx}/{attachmentcount}",
+            theattachment,
         )
         for idx, theattachment in enumerate(attachmentstosend, start=1)
     ]
