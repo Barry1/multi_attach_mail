@@ -37,9 +37,11 @@ env:
   # or posted in a PR (pull_request)
   APPLY_FIXES_MODE: commit
 
-#  PYRIGHT_PYTHON_FORCE_VERSION: latest
+  #  PYRIGHT_PYTHON_FORCE_VERSION: latest
 
-#  PRE_COMMANDS:
+  PRE_COMMANDS: "[{'command': 'echo Hallo', 'cwd': 'root'}]"
+#{'PRE_COMMANDS': [{'command': 'echo Hallo', 'cwd': 'root'}]}
+
 #    - command: echo Hallo
 #      cwd: root
 
