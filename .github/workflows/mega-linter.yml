@@ -1,5 +1,7 @@
 # MegaLinter GitHub Action configuration file
 # More info at https://megalinter.io
+# npx mega-linter-runner --flavor python -e 'SHOW_ELAPSED_TIME=true'
+# https://megalinter.io/latest/flavors/python/
 # taken from <https://raw.githubusercontent.com/oxsecurity/megalinter/main/TEMPLATES/mega-linter.yml>
 ---
 name: MegaLinter
@@ -74,7 +76,9 @@ jobs:
 
         # You can override MegaLinter flavor used to have faster performances
         # More info at https://megalinter.io/flavors/
-        uses: oxsecurity/megalinter@v7
+        uses: oxsecurity/megalinter/flavors/python
+        #oxsecurity/megalinter@v7
+        #oxsecurity/megalinter/flavors/python@v7.10.0
 
         id: ml
 
