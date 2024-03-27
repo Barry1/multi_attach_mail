@@ -40,8 +40,8 @@ env:
 
   #  PYRIGHT_PYTHON_FORCE_VERSION: latest
 
-  PRE_COMMANDS: '[{"command": "pip install --upgrade poetry poetry-plugin-export", "cwd": "root"},{"command": "poetry export > requirements.txt", "cwd": "root"},{"command": "pip install -r requirements.txt", "venv": "pyright"}]'
-
+  PRE_COMMANDS: '[{"command": "pip install --upgrade poetry poetry-plugin-export", "venv": "pyright"},{"command": "poetry export > requirements.txt", "venv": "pyright"},{"command": "pip install -r requirements.txt", "venv": "pyright"}]'
+#cwd root
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
