@@ -4,7 +4,7 @@
 ---
 name: MegaLinter
 
-permissions: none
+permissions: read-all
 
 # Trigger mega-linter at every push. Action will also be visible from Pull
 # Requests to main
@@ -34,17 +34,17 @@ env:
   # or posted in a PR (pull_request)
   APPLY_FIXES_MODE: commit
 
+  PRE_COMMANDS: >-
+    - command: python -m -pip install --upgrade poetry poetry-plugin-export
+      cwd: root
+    - command: poetry export > requirements.txt
+      cwd: root
+    - command: python -m pip install -r requirements.txt
+      cwd: root
+
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
-
-PRE_COMMANDS:
-  - command: python -m -pip install --upgrade poetry poetry-plugin-export
-    cwd: root
-  - command: poetry export > requirements.txt
-    cwd: root
-  - command: python -m pip install -r requirements.txt
-    cwd: root
 
 jobs:
   megalinter:
