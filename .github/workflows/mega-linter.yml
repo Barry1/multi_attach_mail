@@ -11,7 +11,8 @@ permissions: read-all
 # Trigger mega-linter at every push. Action will also be visible from Pull
 # Requests to main
 on:
-  workflow_dispatch
+  - workflow_dispatch
+  - push
   # Comment this line to trigger action only on pull-requests
   # (not recommended if you don't pay for GH Actions)
 #  push:
@@ -39,21 +40,7 @@ env:
 
   #  PYRIGHT_PYTHON_FORCE_VERSION: latest
 
-  PRE_COMMANDS: '[{"command": "python -m pip install --upgrade poetry poetry-plugin-export", "cwd": "root"},{"command": "poetry export > requirements.txt", "cwd": "root"},{"command": "python -m pip install -r requirements.txt", "cwd": "root"}]'
-#{'PRE_COMMANDS': [{'command': 'echo Hallo', 'cwd': 'root'}]}
-
-#    - command: echo Hallo
-#      cwd: root
-
-#    - command: echo Hallo
-#      cwd: root
-
-#    - command: python -m pip install --upgrade poetry poetry-plugin-export
-#      cwd: root
-#    - command: poetry export > requirements.txt
-#      cwd: root
-#    - command: python -m pip install -r requirements.txt
-#      cwd: root
+  PRE_COMMANDS: '[{"command": "pip install --upgrade poetry poetry-plugin-export", "cwd": "root"},{"command": "poetry export > requirements.txt", "cwd": "root"},{"command": "pip install -r requirements.txt", "cwd": "root"}]'
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
