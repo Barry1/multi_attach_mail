@@ -15,7 +15,10 @@ from valuefragments import memoize
 # from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
 
-infourls = ["https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html"]
+infourls = [
+    "https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html",
+    "https://hilfe.gmx.net/pop-imap/pop3/serverdaten.html",
+]
 
 _ATTACHMENTFOLDER = "attachments"
 
