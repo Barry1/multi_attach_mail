@@ -1,4 +1,4 @@
-.PHONY : all clean test
+.PHONY: all clean test
 NUMCPUS=$(shell getconf _NPROCESSORS_ONLN)
 MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
 
