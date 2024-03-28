@@ -776,4 +776,4 @@ resolved_reference = "608cacf6286e355287c92b3467eb49a3c90e3e03"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "465f9cf17611eb58c3ef5521ca0f0f0462ffd7319b7aec927919ae209285a3cc"
+content-hash = "c1b07486e6f2be391f20c5364c64786086cdc233142e194c5b2089cf4a2f46a1"

@@ -9,7 +9,7 @@ packages = [{ include = "multi_attach_mail" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 aiosmtplib = ">=2"
-pyyaml = "*"
+PyYAML = ">6"
 
 [tool.poetry.dependencies.valuefragments]
 git = "https://github.com/Barry1/PyValueFragments"
