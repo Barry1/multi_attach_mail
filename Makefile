@@ -21,3 +21,7 @@ pylint:
 
 mypy:
 	poetry run mypy multi_attach_mail.py
+
+megalinter:
+	npx mega-linter-runner -e "'ENABLE=MARKDOWN,YAML'" -e 'SHOW_ELAPSED_TIME=true'
+
