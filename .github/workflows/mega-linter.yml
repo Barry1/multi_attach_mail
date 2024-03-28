@@ -38,6 +38,8 @@ env:
   # or posted in a PR (pull_request)
   APPLY_FIXES_MODE: commit
 
+  EMAIL_REPORTER_EMAIL: bastian.ebeling+mega-linter@gmail.com
+
   #  PYRIGHT_PYTHON_FORCE_VERSION: latest
 
   PRE_COMMANDS: '[{"command": "pip install --upgrade poetry poetry-plugin-export", "cwd": "root"},{"command": "poetry export --without-hashes --output=requirements.txt", "cwd": "root"},{"command": "pip install -r /github/workspace/requirements.txt", "venv": "pyright"},{"command": "pip install -r /github/workspace/requirements.txt", "venv": "pylint"},{"command": "pip install -r /github/workspace/requirements.txt", "cwd": "root"}]'
