@@ -12,7 +12,7 @@ permissions: read-all
 # Requests to main
 on:
   - workflow_dispatch
-  - push
+#  - push
   # Comment this line to trigger action only on pull-requests
   # (not recommended if you don't pay for GH Actions)
 #  push:
