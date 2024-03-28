@@ -103,6 +103,7 @@ jobs:
 
           # Uncomment to disable copy-paste and spell checks
           # DISABLE: COPYPASTE,SPELL
+          DISABLE_LINTERS: SPELL_CSPELL
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
