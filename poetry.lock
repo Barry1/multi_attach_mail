@@ -839,7 +839,7 @@ typing-extensions = ">=3.7.4"
 
 [[package]]
 name = "valuefragments"
-version = "0.3.30"
+version = "0.3.32"
 description = "Testing installation of Package"
 optional = false
 python-versions = "^3.10"
@@ -856,7 +856,7 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "561939941933c42dbc5df8363fd0e428b1f13002"
+resolved_reference = "9d76acc4fee129452fa89c544bf7083e7496ece6"
 
 [metadata]
 lock-version = "2.0"
