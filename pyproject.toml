@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "multi_attach_mail" }]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 aiosmtplib = ">=2"
 PyYAML = ">6"
 
