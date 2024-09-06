@@ -65,9 +65,7 @@ async def mailmessagewithfile(
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
     #    print(attachmentfilename)
-    with open(
-        _ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb"
-    ) as _theattachment:
+    with open(_ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb") as _theattachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(_theattachment.read())
     encoders.encode_base64(part)
@@ -93,9 +91,7 @@ async def mailmessagewithfile(
 async def mainmethod() -> None:
     """Async method for the main task."""
     print(sys.argv)
-    therecipient: str = (
-        sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
-    )
+    therecipient: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[str] = [
         attachmenttosend
