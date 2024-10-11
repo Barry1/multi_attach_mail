@@ -1,26 +1,26 @@
 version: 0.1
 cli:
-  version: 1.22.5
+  version: 1.22.6
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.2
+      ref: v1.6.3
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - actionlint@1.7.1
-    - markdownlint@0.41.0
-    - bandit@1.7.9
-    - checkov@3.2.246
-    - osv-scanner@1.8.4
-    - trivy@0.55.0
-    - trufflehog@3.81.10
+    - actionlint@1.7.3
+    - markdownlint@0.42.0
+    - bandit@1.7.10
+    - checkov@3.2.256
+    - osv-scanner@1.9.0
+    - trivy@0.55.2
+    - trufflehog@3.82.6
     - black@24.8.0
     - git-diff-check
-    - gitleaks@8.18.4
+    - gitleaks@8.20.0
     - isort@5.13.2
     - prettier@3.3.3
-    - ruff@0.6.4
+    - ruff@0.6.8
     - taplo@0.9.3
     - yamllint@1.35.1
 runtimes:
@@ -34,3 +34,7 @@ actions:
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
     - trunk-upgrade-available
+tools:
+  enabled:
+    - sourcery@1.23.0
+    - poetry@1.8.3
