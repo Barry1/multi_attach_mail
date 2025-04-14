@@ -9,7 +9,7 @@ packages = [{ include = "multi_attach_mail" }]
 [tool.poetry.dependencies]
 aiosmtplib = ">=2"
 pylyzer = "^0.0.51"
-python = "^3.11"
+python = "^3.12"
 PyYAML = ">6"
 
 [tool.poetry.dependencies.valuefragments]
@@ -26,6 +26,7 @@ pyre-check = ">=0.9"
 pyright = ">=1.1"
 ruff = ">=0.3.7"
 types-pyyaml = "^6.0.12.9"
+sourcery = "^1.35.0"
 
 [tool.poetry.group.dev.dependencies.pydocstyle]
 extras = ["toml"]

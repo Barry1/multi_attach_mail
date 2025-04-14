@@ -1042,6 +1042,18 @@ files = [
 ]
 
 [[package]]
+name = "sourcery"
+version = "1.35.0"
+description = "Magically refactor Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sourcery-1.35.0-py2.py3-none-macosx_10_9_universal2.whl", hash = "sha256:196e20bcc1b295b326005f728638f0a4bbb9c1fe7399dce4d4409ecfc9a5e487"},
+    {file = "sourcery-1.35.0-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:0d1c63eb0465ed9405bea422ac6229aa1128e784160a481389ed6dbe90080682"},
+    {file = "sourcery-1.35.0-py2.py3-none-win_amd64.whl", hash = "sha256:61db72f1183abd231bc448a4d03a74738f3b1013ad4396dc2935c080c3863c36"},
+]
+
+[[package]]
 name = "tabulate"
 version = "0.9.0"
 description = "Pretty-print tabular data"
@@ -1174,9 +1186,9 @@ allfeatures = ["cpu-load-generator", "hashlib", "icecream", "psutil (>=6)"]
 type = "git"
 url = "https://github.com/Barry1/PyValueFragments"
 reference = "HEAD"
-resolved_reference = "55ed9982cbd253ed384e3b54ed8d822da3fd3489"
+resolved_reference = "22a2ef7efa7dd7b25d54c9d05b51e5e1d75135db"
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "5a56aa89b3a5e01517c40249d0a161f4331b3a95dd4a564f14c583bf5cdd227d"
+content-hash = "a39d7304b1f7b5fb621c2c8e921e34f5374705e6058290614210488ac341fd3a"
