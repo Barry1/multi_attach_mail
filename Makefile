@@ -29,5 +29,8 @@ mypy:
 megalinter:
 	npx mega-linter-runner -e "'ENABLE=MARKDOWN,YAML'" -e 'SHOW_ELAPSED_TIME=true'
 
+megalinterflavored:
+	npx mega-linter-runner --flavor python -e "'ENABLE=MARKDOWN,YAML'" -e 'SHOW_ELAPSED_TIME=true'
+
 ruff:
 	poetry run ruff format multi_attach_mail.py

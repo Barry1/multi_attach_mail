@@ -11,6 +11,7 @@ aiosmtplib = ">=2"
 pylyzer = "^0.0.51"
 python = "^3.12"
 PyYAML = ">6"
+aiopath = "^0.7.7"
 
 [tool.poetry.dependencies.valuefragments]
 git = "https://github.com/Barry1/PyValueFragments"
@@ -27,6 +28,7 @@ pyright = ">=1.1"
 ruff = ">=0.3.7"
 types-pyyaml = "^6.0.12.9"
 sourcery = "^1.35.0"
+vermin = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies.pydocstyle]
 extras = ["toml"]
