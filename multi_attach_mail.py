@@ -13,6 +13,7 @@ import yaml
 from aiopath import AsyncPath
 from aiosmtplib import SMTP
 from valuefragments import memoize
+from valuefragments.helpers import thread_native_id_filter
 
 # from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
@@ -23,11 +24,10 @@ infourls: list[str] = [
 ]
 
 _ATTACHMENTFOLDER = AsyncPath("attachments")
-
-logging.basicConfig(
-    level=logging.DEBUG if __debug__ else logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
+# logging.basicConfig(
+#    level=logging.DEBUG if __debug__ else logging.INFO,
+#    format=the_format,#"%(asctime)s - %(levelname)s - %(message)s",
+# )
 
 
 class SMTPCFG(TypedDict):
@@ -64,15 +64,13 @@ async def mailmessagewithfile(
     mailreceipient: str, mailsubject: str, attachmentfile: Path
 ) -> None:
     """Create an Email with the attachment and send."""
-    #    print("Start")
-    logging.info("Sending %s to %s", attachmentfile.name, mailreceipient)
+    logging.info("Start sending %s to %s", attachmentfile.name, mailreceipient)
     smtp_creds: SMTPCFG = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
     mailmessage["Subject"] = mailsubject
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
-    #    print(attachmentfilename)
     part = MIMEBase(_maintype="application", _subtype="octet-stream")
     try:
         async with attachmentfile.open("rb") as _theattachment:
@@ -105,15 +103,18 @@ async def mailmessagewithfile(
                 recipients=mailreceipient,
             )
     except Exception as e:
-        print(
-            f"ERROR: Sending {attachmentfile.name} to {mailreceipient} failed: {e}",
-            file=sys.stderr,
+        logging.error(
+            "ERROR: Sending %s to %s failed: %s",
+            attachmentfile.name,
+            mailreceipient,
+            e,
         )
         return
 
 
 async def mainmethod() -> None:
     """Async method for the main task."""
+    setuplogger()
     logging.debug("Aufruf mit %s", sys.argv)
     therecipient: str = (
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
@@ -138,6 +139,39 @@ async def mainmethod() -> None:
         for idx, theattachment in enumerate(attachmentstosend, start=1)
     ]
     await asyncio.gather(*coroutines)
+
+
+def setuplogger():
+    """
+    Configures the logging system with a specific format and logging level.
+
+    The logging format includes the following fields:
+        - Timestamp of the log entry.
+        - Log level (e.g., DEBUG, INFO, WARNING, etc.).
+        - Process ID (PID).
+        - Thread native ID (ThID).
+        - Log message.
+
+    The logging level is set to DEBUG if the `__debug__` flag is True, otherwise it is set to INFO.
+
+    Additionally, a custom filter (`thread_native_id_filter`) is added to the root logger.
+
+    Note:
+        Ensure that `thread_native_id_filter` is defined before calling this function.
+    """
+    the_format: str = "\t".join(
+        [
+            "%(asctime)s",
+            "%(levelname)s",
+            "PID %(process)d",
+            "ThID %(thread_native)d",
+            "%(message)s",
+        ]
+    )
+    logging.getLogger().addFilter(thread_native_id_filter)
+    logging.basicConfig(
+        level=logging.DEBUG if __debug__ else logging.INFO, format=the_format
+    )
 
 
 if __name__ == "__main__":
