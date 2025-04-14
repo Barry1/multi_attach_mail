@@ -66,14 +66,15 @@ async def mailmessagewithfile(
     mailmessage["To"] = mailreceipient
     # mailmessage["Bcc"] = receiver_email
     #    print(attachmentfilename)
+    part = MIMEBase(_maintype="application", _subtype="octet-stream")
     with open(
-        _ATTACHMENTFOLDER + os.sep + attachmentfilename, "rb"
+        file=_ATTACHMENTFOLDER + os.sep + attachmentfilename, mode="rb"
     ) as _theattachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(_theattachment.read())
+        part.set_payload(payload=_theattachment.read())
     encoders.encode_base64(part)
     part.add_header(
-        "Content-Disposition", f"attachment; filename= {attachmentfilename}"
+        _name="Content-Disposition",
+        _value=f"attachment; filename= {attachmentfilename}",
     )
     mailmessage.attach(part)
     async with SMTP(
@@ -100,15 +101,15 @@ async def mainmethod() -> None:
     thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[str] = [
         attachmenttosend
-        for attachmenttosend in os.listdir(_ATTACHMENTFOLDER)
+        for attachmenttosend in os.listdir(path=_ATTACHMENTFOLDER)
         if attachmenttosend != ".PUT_YOUR_ATTACHMENTS_HERE"
     ]
     attachmentcount: int = len(attachmentstosend)
     coroutines = [
         mailmessagewithfile(
-            therecipient,
-            f"{thesubject} {idx}/{attachmentcount}",
-            theattachment,
+            mailreceipient=therecipient,
+            mailsubject=f"{thesubject} {idx}/{attachmentcount}",
+            attachmentfilename=theattachment,
         )
         for idx, theattachment in enumerate(attachmentstosend, start=1)
     ]

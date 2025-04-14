@@ -9,7 +9,9 @@ Just a small python utility which helps you to send multiple attachments in as m
 
 ## Quality Check by Mega Linter
 
-<!-- markdown-link-check-disable --> 
+<!-- markdown-link-check-disable -->
 <!-- deactivation needed as both files are not available - while running mega-linter -->
+
 [![MegaLinter](https://github.com/Barry1/multi_attach_mail/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/Barry1/multi_attach_mail/actions/workflows/mega-linter.yml)
+
 <!-- markdown-link-check-enable -->
