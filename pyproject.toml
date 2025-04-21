@@ -1,17 +1,19 @@
-[tool.poetry]
+[project]
 name = "multi-attach-mail"
 version = "0.1.0"
 description = ""
-authors = ["Dr. Bastian Ebeling <230051+Barry1@users.noreply.github.com>"]
+authors = [
+  { name = "Dr. Bastian Ebeling", email = "230051+Barry1@users.noreply.github.com>" },
+]
 readme = "README.md"
-packages = [{ include = "multi_attach_mail" }]
-
-[tool.poetry.dependencies]
-aiosmtplib = ">=2"
-pylyzer = "^0.0.51"
-python = "^3.12"
-PyYAML = ">6"
-aiopath = "^0.7.7"
+#packages = [{ include = "multi_attach_mail" }]
+requires-python = "^3.12"
+dependencies = [
+  "aiosmtplib >=2",
+  "pylyzer >=0.0.51",
+  "PyYAML >=6",
+  "aiopath >=0.7.7",
+]
 
 [tool.poetry.dependencies.valuefragments]
 git = "https://github.com/Barry1/PyValueFragments"
