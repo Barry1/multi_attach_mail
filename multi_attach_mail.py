@@ -24,10 +24,6 @@ infourls: list[str] = [
 ]
 
 _ATTACHMENTFOLDER = AsyncPath("attachments")
-# logging.basicConfig(
-#    level=logging.DEBUG if __debug__ else logging.INFO,
-#    format=the_format,#"%(asctime)s - %(levelname)s - %(message)s",
-# )
 
 
 class SMTPCFG(TypedDict):
