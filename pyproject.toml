@@ -1,13 +1,13 @@
 [project]
 name = "multi-attach-mail"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = [
   { name = "Dr. Bastian Ebeling", email = "230051+Barry1@users.noreply.github.com>" },
 ]
 readme = "README.md"
 #packages = [{ include = "multi_attach_mail" }]
-requires-python = "^3.12"
+requires-python = ">=3.12"
 dependencies = [
   "aiosmtplib >=2",
   "pylyzer >=0.0.51",
