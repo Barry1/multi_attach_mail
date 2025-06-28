@@ -1,13 +1,13 @@
 [project]
 name = "multi-attach-mail"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = [
   { name = "Dr. Bastian Ebeling", email = "230051+Barry1@users.noreply.github.com>" },
 ]
 readme = "README.md"
 #packages = [{ include = "multi_attach_mail" }]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4"
 dependencies = [
   "aiosmtplib >=2",
   "pylyzer >=0.0.51",
@@ -31,6 +31,7 @@ ruff = ">=0.3.7"
 types-pyyaml = "^6.0.12.9"
 sourcery = "^1.35.0"
 vermin = "^1.6.0"
+pyrefly = "^0.21.0"
 
 [tool.poetry.group.dev.dependencies.pydocstyle]
 extras = ["toml"]
@@ -44,3 +45,7 @@ build-backend = "poetry.core.masonry.api"
 verbose = true
 #linters = "mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,isort"
 linters = "mccabe,mypy,pycodestyle,pyflakes,pylint,isort"
+
+[tool.pyrefly]
+project-includes = ["**/*"]
+project-excludes = ["**/*venv/**/*"]
