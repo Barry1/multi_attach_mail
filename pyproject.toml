@@ -13,6 +13,7 @@ dependencies = [
   "pylyzer >=0.0.51",
   "PyYAML >=6",
   "aiopath >=0.7.7",
+  "valuefragments @ git+https://github.com/Barry1/PyValueFragments",
 ]
 
 [tool.poetry.dependencies.valuefragments]
@@ -32,6 +33,7 @@ types-pyyaml = "^6.0.12.9"
 sourcery = "^1.35.0"
 vermin = "^1.6.0"
 pyrefly = "^0.21.0"
+ty = "^0.0.1a12"
 
 [tool.poetry.group.dev.dependencies.pydocstyle]
 extras = ["toml"]

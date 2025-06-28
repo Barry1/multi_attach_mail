@@ -1,7 +1,9 @@
-.PHONY: all clean test sourcery
+.PHONY: all clean test sourcery pyrefly
 NUMCPUS=$(shell getconf _NPROCESSORS_ONLN)
 MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
 
+pyrefly:
+	poetry run pyrefly check
 
 sourcery:
 	poetry run sourcery review --fix --summary --verbose .
