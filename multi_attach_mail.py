@@ -6,7 +6,6 @@ import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-from pathlib import Path
 from typing import TypedDict
 
 import yaml
