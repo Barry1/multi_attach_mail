@@ -57,7 +57,7 @@ def read_cfg() -> SMTPCFG:
 
 
 async def mailmessagewithfile(
-    mailreceipient: str, mailsubject: str, attachmentfile: Path
+    mailreceipient: str, mailsubject: str, attachmentfile: AsyncPath
 ) -> None:
     """Create an Email with the attachment and send."""
     logging.info("Start sending %s to %s", attachmentfile.name, mailreceipient)

@@ -1,6 +1,6 @@
 [project]
 name = "multi-attach-mail"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = [
   { name = "Dr. Bastian Ebeling", email = "230051+Barry1@users.noreply.github.com>" },
@@ -49,5 +49,6 @@ verbose = true
 linters = "mccabe,mypy,pycodestyle,pyflakes,pylint,isort"
 
 [tool.pyrefly]
-project-includes = ["**/*"]
+project-includes = ["*.py"]
+#project-includes = ["**/*"]
 project-excludes = ["**/*venv/**/*"]
