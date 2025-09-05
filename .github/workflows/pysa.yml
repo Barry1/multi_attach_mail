@@ -39,12 +39,13 @@ jobs:
         with:
           submodules: true
 
-      - name: Run Pysa
+      - name: Run Pysa Action
         uses: facebook/pysa-action
         with:
-          # To customize these inputs:
-          # See https://github.com/facebook/pysa-action#inputs
           repo-directory: './'
           requirements-path: 'requirements.txt'
           infer-types: true
           include-default-sapp-filters: true
+          sapp-filters-directory: path/to/custom-filters
+          # To customize these inputs:
+          # See https://github.com/facebook/pysa-action#inputs
