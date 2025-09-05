@@ -97,7 +97,7 @@ async def mailmessagewithfile(
                 sender=smtp_creds["smtp_user"],
                 recipients=mailreceipient,
             )
-    except Exception as e: # pylint: broad-exception-caught
+    except Exception as e: # pylint: disable=broad-exception-caught
         logging.error(
             "ERROR: Sending %s to %s failed: %s",
             attachmentfile.name,
