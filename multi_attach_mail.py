@@ -111,9 +111,7 @@ async def mainmethod() -> None:
     """Async method for the main task."""
     setuplogger()
     logging.debug("Aufruf mit %s", sys.argv)
-    therecipient: str = (
-        sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
-    )
+    therecipient: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[AsyncPath] = [
         file
@@ -147,12 +145,14 @@ def setuplogger():
         - Thread native ID (ThID).
         - Log message.
 
-    The logging level is set to DEBUG if the `__debug__` flag is True, otherwise it is set to INFO.
+    The logging level is set to DEBUG if the `__debug__` flag is True,
+    otherwise it is set to INFO.
 
-    Additionally, a custom filter (`thread_native_id_filter`) is added to the root logger.
+    Additionally, a custom filter (`thread_native_id_filter`)
+    is added to the root logger.
 
     Note:
-        Ensure that `thread_native_id_filter` is defined before calling this function.
+        Ensure that `thread_native_id_filter` is defined before.
     """
     the_format: str = "\t".join(
         [
