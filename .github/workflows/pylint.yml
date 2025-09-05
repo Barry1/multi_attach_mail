@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.12", "3.13", "3.14dev"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -19,6 +19,7 @@ jobs:
         python -m pip install --upgrade pip poetry pylint poetry-plugin-export
         # poetry self add poetry-plugin-export
         poetry export --without-hashes --format=requirements.txt > requirements.txt
+        cat requirements.txt
         python -m pip install  --requirement requirements.txt
     - name: Analysing the code with pylint
       run: |
