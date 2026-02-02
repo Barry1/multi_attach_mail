@@ -34,6 +34,7 @@ sourcery = "^1.35.0"
 vermin = "^1.6.0"
 pyrefly = "^0.21.0"
 ty = "^0.0.1a12"
+pyupgrade = "^3.21.2"
 
 [tool.poetry.group.dev.dependencies.pydocstyle]
 extras = ["toml"]

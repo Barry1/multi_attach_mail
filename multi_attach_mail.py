@@ -39,7 +39,7 @@ def read_cfg() -> SMTPCFG:
     """Read configuration from smtpcred.yaml."""
     try:
         # noinspection PyArgumentEqualDefault
-        with open("smtpcred.yaml", "r", encoding="ascii") as cfgfile:
+        with open("smtpcred.yaml", encoding="ascii") as cfgfile:
             return yaml.safe_load(cfgfile)
     except FileNotFoundError:
         logging.error(
@@ -97,7 +97,7 @@ async def mailmessagewithfile(
                 sender=smtp_creds["smtp_user"],
                 recipients=mailreceipient,
             )
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logging.error(
             "ERROR: Sending %s to %s failed: %s",
             attachmentfile.name,
