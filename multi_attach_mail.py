@@ -39,7 +39,7 @@ def read_cfg() -> SMTPCFG:
     """Read configuration from smtpcred.yaml."""
     try:
         # noinspection PyArgumentEqualDefault
-        with open("smtpcred.yaml", "r", encoding="ascii") as cfgfile:
+        with open("smtpcred.yaml", encoding="ascii") as cfgfile:
             return yaml.safe_load(cfgfile)
     except FileNotFoundError:
         logging.error(
