@@ -48,10 +48,10 @@ def read_cfg() -> SMTPCFG:
             "I created a template, please fill.",
         )
         with open("smtpcred.yaml", "x", encoding="ascii") as cfgfile:
-            print("smtp_server : YOURSMTPSERVER", file=cfgfile)
-            print("smtp_port : YOURSMTPSSLSERVERPORT465", file=cfgfile)
-            print("smtp_user : YOURSMTPUSERNAME", file=cfgfile)
-            print("smtp_password : YOURSMTPPASSWORD ", file=cfgfile)
+            cfgfile.write("smtp_server : YOURSMTPSERVER\n")
+            cfgfile.write("smtp_port : YOURSMTPSSLSERVERPORT465\n")
+            cfgfile.write("smtp_user : YOURSMTPUSERNAME\n")
+            cfgfile.write("smtp_password : YOURSMTPPASSWORD\n")
         raise
 
 
