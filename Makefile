@@ -2,6 +2,9 @@
 NUMCPUS=$(shell getconf _NPROCESSORS_ONLN)
 MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
 
+wemake-python-styleguide:
+	poetry run flake8 multi_attach_mail.py --select=WPS
+
 pyrefly:
 	poetry run pyrefly check
 

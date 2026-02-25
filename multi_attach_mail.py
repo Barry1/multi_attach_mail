@@ -68,8 +68,8 @@ async def mailmessagewithfile(
     # mailmessage["Bcc"] = receiver_email
     part = MIMEBase(_maintype="application", _subtype="octet-stream")
     try:
-        async with attachmentfile.open("rb") as _theattachment:
-            part.set_payload(payload=await _theattachment.read())
+        async with attachmentfile.open("rb") as theattachment:
+            part.set_payload(payload=await theattachment.read())
     except FileNotFoundError:
         logging.error(
             "ERROR: File %s not found in %s.",
@@ -97,12 +97,14 @@ async def mailmessagewithfile(
                 sender=smtp_creds["smtp_user"],
                 recipients=mailreceipient,
             )
-    except Exception as e:  # pylint: disable=broad-exception-caught
+    except Exception as theexception:  # pylint: disable=broad-exception-caught
         logging.error(
             "ERROR: Sending %s to %s failed: %s",
             attachmentfile.name,
             mailreceipient,
-            e,
+            theexception,
+            exc_info=True,
+            stack_info=True,
         )
         return
 
@@ -114,9 +116,10 @@ async def mainmethod() -> None:
     therecipient: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
     attachmentstosend: list[AsyncPath] = [
-        file
-        async for file in _ATTACHMENTFOLDER.iterdir()
-        if await file.is_file() and file.name != ".PUT_YOUR_ATTACHMENTS_HERE"
+        attachfile
+        async for attachfile in _ATTACHMENTFOLDER.iterdir()
+        if await attachfile.is_file()
+        and attachfile.name != ".PUT_YOUR_ATTACHMENTS_HERE"
     ]
     logging.debug("%s", attachmentstosend)
     if not attachmentstosend:
