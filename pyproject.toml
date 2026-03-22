@@ -24,7 +24,6 @@ autopep8 = ">=2"
 black = ">=23"
 flynt = "^1.0.1"
 mypy = "^1.1.1"
-pylama = ">=8.4"
 pylint = ">=2.17"
 pyre-check = ">=0.9"
 pyright = ">=1.1"
@@ -46,11 +45,6 @@ version = "^6.3.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.pylama]
-verbose = true
-#linters = "mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,isort"
-linters = "mccabe,mypy,pycodestyle,pyflakes,pylint,isort"
 
 [tool.pyrefly]
 project-includes = ["*.py"]
