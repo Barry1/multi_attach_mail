@@ -137,7 +137,7 @@ async def mainmethod() -> None:
     await asyncio.gather(*coroutines)
 
 
-def setuplogger():
+def setuplogger() -> None:
     """
     Configures the logging system with a specific format and logging level.
 
