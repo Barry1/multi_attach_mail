@@ -126,7 +126,11 @@ async def mainmethod() -> None:
             mailreceipient=(
                 sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
             ),
-            mailsubject=f"{sys.argv[2] if len(sys.argv) > 2 else "Betreff"} {idx}/{len(attachmentstosend)}",
+            mailsubject=(
+                sys.argv[2]
+                if len(sys.argv) > 2
+                else "Betreff" + f"{idx}/{len(attachmentstosend)}"
+            ),
             attachmentfile=theattachment,
         )
         for idx, theattachment in enumerate(attachmentstosend, start=1)
