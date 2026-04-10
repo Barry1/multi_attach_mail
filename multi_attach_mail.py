@@ -7,24 +7,17 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from typing import TypedDict
-
 import yaml
 from aiopath import AsyncPath
 from aiosmtplib import SMTP
-from valuefragments import memoize
-from valuefragments.helpers import thread_native_id_filter
-
+from valuefragments import memoize, thread_native_id_filter
 # from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
-
 infourls: list[str] = [
     "https://hilfe.web.de/pop-imap/imap/imap-serverdaten.html",
     "https://hilfe.gmx.net/pop-imap/pop3/serverdaten.html",
 ]
-
 _ATTACHMENTFOLDER = AsyncPath("attachments")
-
-
 class SMTPCFG(TypedDict):
     """Just a Type-Class for the configuration."""
 
@@ -113,8 +106,12 @@ async def mainmethod() -> None:
     """Async method for the main task."""
     setuplogger()
     logging.debug("Aufruf mit %s", sys.argv)
-    therecipient: str = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
-    thesubject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
+    therecipient: str = (sys.argv[1]
+                         if len(sys.argv) > 1
+                         else "bastian.ebeling@web.de")
+    thesubject: str = (sys.argv[2]
+                       if len(sys.argv) > 2
+                       else "Betreff")
     attachmentstosend: list[AsyncPath] = [
         attachfile
         async for attachfile in _ATTACHMENTFOLDER.iterdir()
