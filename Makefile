@@ -42,3 +42,6 @@ megalinterflavored:
 
 ruff:
 	poetry run ruff format multi_attach_mail.py
+
+vermin:
+	poetry run vermin multi_attach_mail.py
