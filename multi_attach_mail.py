@@ -129,7 +129,7 @@ async def mainmethod() -> None:
             mailsubject=(
                 sys.argv[2]
                 if len(sys.argv) > 2
-                else "Betreff" + f"{idx}/{len(attachmentstosend)}"
+                else f"Betreff {idx}/{len(attachmentstosend)}"
             ),
             attachmentfile=theattachment,
         )
