@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from typing import TypedDict
 
 import yaml
-from aiopath import AsyncPath
+from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP
 from valuefragments import memoize, thread_native_id_filter
 
