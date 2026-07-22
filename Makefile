@@ -1,5 +1,5 @@
 .PHONY: all clean test sourcery pyrefly
-NUMCPUS=$(shell getconf _NPROCESSORS_ONLN)
+NUMCPUS = $(shell getconf _NPROCESSORS_ONLN)
 MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
 
 pyupgrade:
