@@ -57,7 +57,9 @@ async def mailmessagewithfile(
     mailreceipient: str, mailsubject: str, attachmentfile: AsyncPath
 ) -> None:
     """Create an Email with the attachment and send."""
-    my_logger.info("Start sending %s to %s", attachmentfile.name, mailreceipient)
+    my_logger.info(
+        "Start sending %s to %s", attachmentfile.name, mailreceipient
+    )
     smtp_creds: SMTPCFG = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
@@ -160,7 +162,8 @@ def setuplogger() -> None:
     the_format: str = "%(asctime)s\t%(levelname)s\tPID %(process)d\tThID %(thread_native)d\t%(message)s"
     my_logger.addFilter(thread_native_id_filter)
     my_logger.basicConfig(
-        level=my_logger.DEBUG if __debug__ else my_logger.INFO, format=the_format
+        level=my_logger.DEBUG if __debug__ else my_logger.INFO,
+        format=the_format,
     )
 
 
