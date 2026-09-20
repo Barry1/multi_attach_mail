@@ -50,3 +50,6 @@ build-backend = "poetry.core.masonry.api"
 project-includes = ["*.py"]
 #project-includes = ["**/*"]
 project-excludes = ["**/*venv/**/*"]
+
+[tool.ruff]
+line-length = 79

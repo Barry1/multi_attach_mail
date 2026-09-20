@@ -1,11 +1,11 @@
 """Send attachments."""
 
 import asyncio
-import logging
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
+from logging import Logger, getLogger
 from typing import TypedDict
 
 import yaml
@@ -13,6 +13,7 @@ from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP
 from valuefragments import memoize, thread_native_id_filter
 
+my_logger: Logger = getLogger(__name__)
 # from email.mime.text import MIMEText
 # https://realpython.com/python-send-email/#adding-attachments-using-the-email-package
 infourls: list[str] = [
@@ -39,7 +40,7 @@ def read_cfg() -> SMTPCFG:
         with open("smtpcred.yaml", encoding="ascii") as cfgfile:
             return yaml.safe_load(cfgfile)
     except FileNotFoundError:
-        logging.error(
+        my_logger.error(
             "%s %s",
             "ERROR: smtpcred.yaml was not found,",
             "I created a template, please fill.",
@@ -56,7 +57,9 @@ async def mailmessagewithfile(
     mailreceipient: str, mailsubject: str, attachmentfile: AsyncPath
 ) -> None:
     """Create an Email with the attachment and send."""
-    logging.info("Start sending %s to %s", attachmentfile.name, mailreceipient)
+    my_logger.info(
+        "Start sending %s to %s", attachmentfile.name, mailreceipient
+    )
     smtp_creds: SMTPCFG = read_cfg()
     mailmessage = MIMEMultipart()
     mailmessage["From"] = smtp_creds["smtp_user"]
@@ -68,7 +71,7 @@ async def mailmessagewithfile(
         async with attachmentfile.open("rb") as theattachment:
             part.set_payload(payload=await theattachment.read())
     except FileNotFoundError:
-        logging.error(
+        my_logger.error(
             "ERROR: File %s not found in %s.",
             attachmentfile,
             _ATTACHMENTFOLDER,
@@ -94,13 +97,11 @@ async def mailmessagewithfile(
                 sender=smtp_creds["smtp_user"],
                 recipients=mailreceipient,
             )
-    except Exception as theexception:  # pylint: disable=broad-exception-caught
-        logging.error(
-            "ERROR: Sending %s to %s failed: %s",
+    except Exception:  # pylint: disable=broad-exception-caught
+        my_logger.exception(
+            "ERROR: Sending %s to %s failed.",
             attachmentfile.name,
             mailreceipient,
-            theexception,
-            exc_info=True,
             stack_info=True,
         )
         return
@@ -109,16 +110,16 @@ async def mailmessagewithfile(
 async def mainmethod() -> None:
     """Async method for the main task."""
     setuplogger()
-    logging.debug("Aufruf mit %s", sys.argv)
+    my_logger.debug("Aufruf mit %s", sys.argv)
     attachmentstosend: list[AsyncPath] = [
         attachfile
         async for attachfile in _ATTACHMENTFOLDER.iterdir()
         if await attachfile.is_file()
         and attachfile.name != ".PUT_YOUR_ATTACHMENTS_HERE"
     ]
-    logging.debug("%s", attachmentstosend)
+    my_logger.debug("%s", attachmentstosend)
     if not attachmentstosend:
-        logging.warning("No attachments found in the folder.")
+        my_logger.warning("No attachments found in the folder.")
         return
 
     coroutines = [
@@ -158,18 +159,11 @@ def setuplogger() -> None:
     Note:
         Ensure that `thread_native_id_filter` is defined before.
     """
-    the_format: str = "\t".join(
-        [
-            "%(asctime)s",
-            "%(levelname)s",
-            "PID %(process)d",
-            "ThID %(thread_native)d",
-            "%(message)s",
-        ]
-    )
-    logging.getLogger().addFilter(thread_native_id_filter)
-    logging.basicConfig(
-        level=logging.DEBUG if __debug__ else logging.INFO, format=the_format
+    the_format: str = "%(asctime)s\t%(levelname)s\tPID %(process)d\tThID %(thread_native)d\t%(message)s"
+    my_logger.addFilter(thread_native_id_filter)
+    my_logger.basicConfig(
+        level=my_logger.DEBUG if __debug__ else my_logger.INFO,
+        format=the_format,
     )
 
 
