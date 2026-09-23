@@ -3,7 +3,7 @@ name: WeMakePythonStyleGuide
 on: [push]
 
 jobs:
-  build:
+  WPS:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
