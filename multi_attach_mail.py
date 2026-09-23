@@ -159,7 +159,13 @@ def setuplogger() -> None:
     Note:
         Ensure that `thread_native_id_filter` is defined before.
     """
-    the_format: str = "%(asctime)s\t%(levelname)s\tPID %(process)d\tThID %(thread_native)d\t%(message)s"
+    the_format: str = (
+        "%(asctime)s\t"
+        "%(levelname)s\t"
+        "PID %(process)d\t"
+        "ThID %(thread_native)d\t"
+        "%(message)s"
+    )
     my_logger.addFilter(thread_native_id_filter)
     my_logger.basicConfig(
         level=my_logger.DEBUG if __debug__ else my_logger.INFO,
