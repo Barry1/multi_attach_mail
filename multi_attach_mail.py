@@ -1,9 +1,10 @@
 """Send attachments as separate emails."""
 
 import asyncio
+import os
 import sys
 from email.message import EmailMessage
-from logging import DEBUG, INFO, basicConfig, getLogger
+from logging import DEBUG, INFO, Logger, basicConfig, getLogger
 from typing import Final, TypedDict
 
 import yaml
@@ -11,10 +12,13 @@ from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP
 from valuefragments import memoize, thread_native_id_filter
 
-logger = getLogger(__name__)
-
+logger: Logger = getLogger(__name__)
 _ATTACHMENT_FOLDER: Final = AsyncPath("attachments")
-MAX_SMTP_WORKERS: Final[int] = 2
+MAX_SMTP_WORKERS: Final[int] = (
+    os.process_cpu_count()
+    if hasattr(os, "process_cpu_count")
+    else os.cpu_count()
+) or 1
 
 
 class SMTPCFG(TypedDict):
@@ -26,12 +30,16 @@ class SMTPCFG(TypedDict):
     smtp_password: str
 
 
+QueueItem = tuple[AsyncPath, str]
+QueueItemOrSentinel = QueueItem | None
+
+
 @memoize
 def read_cfg() -> SMTPCFG:
-    """Read configuration from smtpcred.yaml."""
+    """Read and validate the SMTP configuration."""
     try:
         with open("smtpcred.yaml", encoding="utf-8") as cfgfile:
-            config = yaml.safe_load(cfgfile)
+            config: object = yaml.safe_load(cfgfile)
     except FileNotFoundError:
         logger.error(
             "smtpcred.yaml was not found. "
@@ -47,33 +55,46 @@ def read_cfg() -> SMTPCFG:
     if not isinstance(config, dict):
         raise TypeError("smtpcred.yaml must contain a YAML mapping.")
 
-    required_keys = {
-        "smtp_server",
-        "smtp_port",
-        "smtp_user",
-        "smtp_password",
-    }
+    required_keys: Final[frozenset[str]] = frozenset(
+        {
+            "smtp_server",
+            "smtp_port",
+            "smtp_user",
+            "smtp_password",
+        }
+    )
 
     missing_keys = required_keys - config.keys()
+
     if missing_keys:
-        raise ValueError(
+        raise TypeError(
             "Missing configuration entries in smtpcred.yaml: "
             + ", ".join(sorted(missing_keys))
         )
 
-    if not isinstance(config["smtp_server"], str):
+    smtp_server = config["smtp_server"]
+    smtp_port = config["smtp_port"]
+    smtp_user = config["smtp_user"]
+    smtp_password = config["smtp_password"]
+
+    if not isinstance(smtp_server, str):
         raise TypeError("smtp_server must be a string.")
 
-    if not isinstance(config["smtp_port"], int):
+    if not isinstance(smtp_port, int):
         raise TypeError("smtp_port must be an integer.")
 
-    if not isinstance(config["smtp_user"], str):
+    if not isinstance(smtp_user, str):
         raise TypeError("smtp_user must be a string.")
 
-    if not isinstance(config["smtp_password"], str):
+    if not isinstance(smtp_password, str):
         raise TypeError("smtp_password must be a string.")
 
-    return config  # type: ignore[return-value]
+    return SMTPCFG(
+        smtp_server=smtp_server,
+        smtp_port=smtp_port,
+        smtp_user=smtp_user,
+        smtp_password=smtp_password,
+    )
 
 
 async def create_message(
@@ -91,7 +112,7 @@ async def create_message(
 
     try:
         async with attachment_file.open("rb") as attachment:
-            payload = await attachment.read()
+            payload: bytes = await attachment.read()
     except FileNotFoundError:
         logger.error(
             "File %s not found in %s.",
@@ -100,7 +121,8 @@ async def create_message(
         )
         return None
 
-    message = EmailMessage()
+    message: EmailMessage = EmailMessage()
+
     message["From"] = sender
     message["To"] = mail_recipient
     message["Subject"] = mail_subject
@@ -116,14 +138,17 @@ async def create_message(
 
 
 async def smtp_worker(
-    queue: asyncio.Queue[tuple[AsyncPath, str] | None],
+    queue: asyncio.Queue[QueueItemOrSentinel],
     smtp_config: SMTPCFG,
     mail_recipient: str,
     sender: str,
     worker_number: int,
 ) -> None:
     """Process attachments using one persistent SMTP connection."""
-    logger.debug("Starting SMTP worker %d.", worker_number)
+    logger.debug(
+        "Starting SMTP worker %d.",
+        worker_number,
+    )
 
     async with SMTP(
         hostname=smtp_config["smtp_server"],
@@ -141,7 +166,7 @@ async def smtp_worker(
         )
 
         while True:
-            queue_item = await queue.get()
+            queue_item: QueueItemOrSentinel = await queue.get()
 
             try:
                 if queue_item is None:
@@ -186,12 +211,18 @@ async def smtp_worker(
 
 async def get_attachments() -> list[AsyncPath]:
     """Return all files from the attachment folder."""
-    return [
-        attachment_file
-        async for attachment_file in _ATTACHMENT_FOLDER.iterdir()
-        if await attachment_file.is_file()
-        and attachment_file.name != ".PUT_YOUR_ATTACHMENTS_HERE"
-    ]
+    attachments: list[AsyncPath] = []
+
+    async for attachment_file in _ATTACHMENT_FOLDER.iterdir():
+        if not await attachment_file.is_file():
+            continue
+
+        if attachment_file.name == ".PUT_YOUR_ATTACHMENTS_HERE":
+            continue
+
+        attachments.append(attachment_file)
+
+    return attachments
 
 
 async def send_attachments(
@@ -201,19 +232,21 @@ async def send_attachments(
     smtp_config: SMTPCFG,
 ) -> None:
     """Send all attachments using a pool of SMTP workers."""
-    queue: asyncio.Queue[tuple[AsyncPath, str] | None] = asyncio.Queue()
-
-    sender = smtp_config["smtp_user"]
-
-    worker_count = min(MAX_SMTP_WORKERS, len(attachments))
+    queue: asyncio.Queue[QueueItemOrSentinel] = asyncio.Queue()
+    sender: str = smtp_config["smtp_user"]
+    attachment_count: int = len(attachments)
+    worker_count: int = min(
+        MAX_SMTP_WORKERS,
+        attachment_count,
+    )
 
     logger.info(
         "Using %d SMTP workers for %d attachments.",
         worker_count,
-        len(attachments),
+        attachment_count,
     )
 
-    workers = [
+    workers: list[asyncio.Task[None]] = [
         asyncio.create_task(
             smtp_worker(
                 queue=queue,
@@ -227,14 +260,20 @@ async def send_attachments(
     ]
 
     try:
-        attachment_count = len(attachments)
-
         for attachment_number, attachment in enumerate(
             attachments,
             start=1,
         ):
-            subject = f"{mail_subject} {attachment_number}/{attachment_count}"
-            await queue.put((attachment, subject))
+            subject: str = (
+                f"{mail_subject} {attachment_number}/{attachment_count}"
+            )
+
+            await queue.put(
+                (
+                    attachment,
+                    subject,
+                )
+            )
 
         await queue.join()
 
@@ -244,6 +283,7 @@ async def send_attachments(
         await queue.join()
 
         await asyncio.gather(*workers)
+
     except Exception:
         for worker in workers:
             worker.cancel()
@@ -252,6 +292,7 @@ async def send_attachments(
             *workers,
             return_exceptions=True,
         )
+
         raise
 
 
@@ -259,11 +300,11 @@ def get_command_line_arguments(
     attachment_count: int,
 ) -> tuple[str, str]:
     """Return recipient and subject from command-line arguments."""
-    mail_recipient = (
+    mail_recipient: str = (
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     )
 
-    mail_subject = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
+    mail_subject: str = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
 
     return mail_recipient, mail_subject
 
@@ -272,15 +313,18 @@ async def main() -> None:
     """Run the main task."""
     setuplogger()
 
-    logger.debug("Invocation with %s", sys.argv)
+    logger.debug(
+        "Invocation with %s",
+        sys.argv,
+    )
 
-    attachments = await get_attachments()
+    attachments: list[AsyncPath] = await get_attachments()
 
     if not attachments:
         logger.warning("No attachments found in the folder.")
         return
 
-    smtp_config = read_cfg()
+    smtp_config: SMTPCFG = read_cfg()
 
     mail_recipient, mail_subject = get_command_line_arguments(len(attachments))
 
@@ -300,7 +344,7 @@ async def main() -> None:
 
 def setuplogger() -> None:
     """Configure logging."""
-    the_format = (
+    the_format: str = (
         "%(asctime)s\t"
         "%(levelname)s\t"
         "PID %(process)d\t"
@@ -308,7 +352,7 @@ def setuplogger() -> None:
         "%(message)s"
     )
 
-    logger.addFilter(thread_native_id_filter)
+    logger.addFilter(filter=thread_native_id_filter)
 
     basicConfig(
         level=DEBUG if __debug__ else INFO,
@@ -317,4 +361,4 @@ def setuplogger() -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main=main())
