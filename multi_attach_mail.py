@@ -296,9 +296,7 @@ async def send_attachments(
         raise
 
 
-def get_command_line_arguments(
-    attachment_count: int,
-) -> tuple[str, str]:
+def get_command_line_arguments() -> tuple[str, str]:
     """Return recipient and subject from command-line arguments."""
     mail_recipient: str = (
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
@@ -326,7 +324,7 @@ async def main() -> None:
 
     smtp_config: SMTPCFG = read_cfg()
 
-    mail_recipient, mail_subject = get_command_line_arguments(len(attachments))
+    mail_recipient, mail_subject = get_command_line_arguments()
 
     logger.info(
         "Sending %d attachments using up to %d SMTP workers.",
