@@ -3,7 +3,7 @@
 import asyncio
 import sys
 from email.message import EmailMessage
-from logging import DEBUG, INFO, Logger, basicConfig, getLogger
+from logging import DEBUG, INFO, basicConfig, getLogger
 from typing import Final, TypedDict
 
 import yaml
@@ -11,10 +11,10 @@ from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP
 from valuefragments import memoize, thread_native_id_filter
 
-logger: Logger = getLogger(name=__name__)
+logger = getLogger(__name__)
 
 _ATTACHMENT_FOLDER: Final = AsyncPath("attachments")
-MAX_SMTP_WORKERS: Final[int] = 4
+MAX_SMTP_WORKERS: Final[int] = 2
 
 
 class SMTPCFG(TypedDict):
@@ -116,10 +116,9 @@ async def create_message(
 
 
 async def smtp_worker(
-    queue: asyncio.Queue[AsyncPath | None],
+    queue: asyncio.Queue[tuple[AsyncPath, str] | None],
     smtp_config: SMTPCFG,
     mail_recipient: str,
-    mail_subject: str,
     sender: str,
     worker_number: int,
 ) -> None:
@@ -142,15 +141,17 @@ async def smtp_worker(
         )
 
         while True:
-            attachment_file = await queue.get()
+            queue_item = await queue.get()
 
             try:
-                if attachment_file is None:
+                if queue_item is None:
                     logger.debug(
                         "SMTP worker %d received shutdown signal.",
                         worker_number,
                     )
                     return
+
+                attachment_file, mail_subject = queue_item
 
                 message = await create_message(
                     mail_recipient=mail_recipient,
@@ -170,15 +171,14 @@ async def smtp_worker(
                     )
                 except Exception:
                     logger.exception(
-                        "Sending %s to %s failed.",
+                        "Sending %s failed.",
                         attachment_file.name,
-                        mail_recipient,
                     )
                 else:
                     logger.info(
-                        "Successfully sent %s to %s.",
+                        "Successfully sent %s with subject %r.",
                         attachment_file.name,
-                        mail_recipient,
+                        mail_subject,
                     )
             finally:
                 queue.task_done()
@@ -201,9 +201,17 @@ async def send_attachments(
     smtp_config: SMTPCFG,
 ) -> None:
     """Send all attachments using a pool of SMTP workers."""
-    queue: asyncio.Queue[AsyncPath | None] = asyncio.Queue()
+    queue: asyncio.Queue[tuple[AsyncPath, str] | None] = asyncio.Queue()
 
     sender = smtp_config["smtp_user"]
+
+    worker_count = min(MAX_SMTP_WORKERS, len(attachments))
+
+    logger.info(
+        "Using %d SMTP workers for %d attachments.",
+        worker_count,
+        len(attachments),
+    )
 
     workers = [
         asyncio.create_task(
@@ -211,17 +219,22 @@ async def send_attachments(
                 queue=queue,
                 smtp_config=smtp_config,
                 mail_recipient=mail_recipient,
-                mail_subject=mail_subject,
                 sender=sender,
                 worker_number=worker_number,
             )
         )
-        for worker_number in range(1, MAX_SMTP_WORKERS + 1)
+        for worker_number in range(1, worker_count + 1)
     ]
 
     try:
-        for attachment in attachments:
-            await queue.put(attachment)
+        attachment_count = len(attachments)
+
+        for attachment_number, attachment in enumerate(
+            attachments,
+            start=1,
+        ):
+            subject = f"{mail_subject} {attachment_number}/{attachment_count}"
+            await queue.put((attachment, subject))
 
         await queue.join()
 
@@ -235,7 +248,10 @@ async def send_attachments(
         for worker in workers:
             worker.cancel()
 
-        await asyncio.gather(*workers, return_exceptions=True)
+        await asyncio.gather(
+            *workers,
+            return_exceptions=True,
+        )
         raise
 
 
@@ -247,9 +263,7 @@ def get_command_line_arguments(
         sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
     )
 
-    mail_subject = (
-        sys.argv[2] if len(sys.argv) > 2 else f"Betreff 1/{attachment_count}"
-    )
+    mail_subject = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
 
     return mail_recipient, mail_subject
 
@@ -271,7 +285,7 @@ async def main() -> None:
     mail_recipient, mail_subject = get_command_line_arguments(len(attachments))
 
     logger.info(
-        "Sending %d attachments using %d SMTP workers.",
+        "Sending %d attachments using up to %d SMTP workers.",
         len(attachments),
         MAX_SMTP_WORKERS,
     )
@@ -294,7 +308,7 @@ def setuplogger() -> None:
         "%(message)s"
     )
 
-    logger.addFilter(filter=thread_native_id_filter)
+    logger.addFilter(thread_native_id_filter)
 
     basicConfig(
         level=DEBUG if __debug__ else INFO,
