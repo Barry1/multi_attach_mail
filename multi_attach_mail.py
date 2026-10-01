@@ -5,7 +5,7 @@ import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-from logging import Logger, getLogger, basicConfig
+from logging import Logger, basicConfig, getLogger
 from typing import TypedDict
 
 import yaml
