@@ -5,7 +5,7 @@ import sys
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-from logging import Logger, getLogger
+from logging import Logger, getLogger, basicConfig
 from typing import TypedDict
 
 import yaml
@@ -166,12 +166,12 @@ def setuplogger() -> None:
         "ThID %(thread_native)d\t"
         "%(message)s"
     )
-    my_logger.addFilter(thread_native_id_filter)
-    my_logger.basicConfig(
+    my_logger.addFilter(filter=thread_native_id_filter)
+    basicConfig(
         level=my_logger.DEBUG if __debug__ else my_logger.INFO,
         format=the_format,
     )
 
 
 if __name__ == "__main__":
-    asyncio.run(mainmethod())
+    asyncio.run(main=mainmethod())
