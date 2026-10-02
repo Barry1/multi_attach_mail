@@ -2,10 +2,10 @@
 
 import asyncio
 import os
-import sys
 from email.message import EmailMessage
 from logging import DEBUG, INFO, Logger, basicConfig, getLogger
-from typing import Final, Optional
+from sys import argv as sys_argv
+from typing import Final
 
 from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP, SMTPException
@@ -37,7 +37,7 @@ class SMTPConfig(BaseModel):
 
 
 QueueItem = tuple[AsyncPath, str]
-QueueItemOrSentinel = Optional[QueueItem]
+QueueItemOrSentinel = QueueItem | None
 
 
 @memoize
@@ -291,8 +291,8 @@ async def send_attachments(
 
 def get_command_line_arguments() -> tuple[str, str]:
     """Return recipient and subject from command-line arguments."""
-    recipient = sys.argv[1] if len(sys.argv) > 1 else "bastian.ebeling@web.de"
-    mail_subject = sys.argv[2] if len(sys.argv) > 2 else "Betreff"
+    recipient = sys_argv[1] if len(sys_argv) > 1 else "bastian.ebeling@web.de"
+    mail_subject = sys_argv[2] if len(sys_argv) > 2 else "Betreff"
     return recipient, mail_subject
 
 
@@ -300,7 +300,7 @@ async def main() -> None:
     """Run the mail attachment sender."""
     setuplogger()
 
-    logger.debug("Command line arguments: %s", sys.argv)
+    logger.debug("Command line arguments: %s", sys_argv)
 
     attachments = await get_attachments()
     if not attachments:
