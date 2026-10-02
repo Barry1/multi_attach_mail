@@ -7,11 +7,11 @@ from email.message import EmailMessage
 from logging import DEBUG, INFO, Logger, basicConfig, getLogger
 from typing import Final, Optional
 
-import yaml
 from aiopath import AsyncPath  # type: ignore[import-untyped]
 from aiosmtplib import SMTP, SMTPException
 from pydantic import BaseModel, Field
 from valuefragments import memoize, thread_native_id_filter
+from yaml import safe_load
 
 logger: Logger = getLogger(__name__)
 
@@ -45,7 +45,7 @@ def read_cfg() -> SMTPConfig:
     """Read and validate the SMTP configuration from smtpcred.yaml."""
     try:
         with open("smtpcred.yaml", encoding="utf-8") as cfgfile:
-            config: object = yaml.safe_load(cfgfile)
+            config: object = safe_load(cfgfile)
     except FileNotFoundError:
         logger.error("smtpcred.yaml not found. Creating a template file.")
         with open("smtpcred.yaml", "x", encoding="utf-8") as cfgfile:
@@ -90,7 +90,7 @@ async def create_message(
     message = EmailMessage()
     message["From"] = sender
     message["To"] = recipient
-    message["Subject"] = str(mail_subject)[:255]
+    message["Subject"] = mail_subject[:255]
     message.set_content(
         f"Attached file: {attachment_file.name} ({size} bytes)"
     )
@@ -139,7 +139,7 @@ async def _connect_smtp_with_retries(
                     "Retrying in %.1f seconds.",
                     attempt,
                     _MAX_CONNECT_RETRIES,
-                    exc,
+                    last_exc,
                     delay,
                 )
                 await asyncio.sleep(delay)
