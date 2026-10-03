@@ -1,8 +1,8 @@
 """Send attachments as separate emails (refactored)."""
 
+# https://copilot.com/chat/conversation/ebc026ef-45d2-154c-b529-a038ba04434e
 import asyncio
 import logging
-import os
 from email.message import EmailMessage
 from logging import DEBUG, INFO, Logger, getLogger
 from sys import argv as sys_argv
@@ -18,11 +18,12 @@ logger: Logger = getLogger(__name__)
 
 _ATTACHMENT_FOLDER: Final[AsyncPath] = AsyncPath("attachments")
 
-MAX_SMTP_WORKERS: Final[int] = (
-    os.process_cpu_count()
-    if hasattr(os, "process_cpu_count")
-    else os.cpu_count()
-) or 1
+MAX_SMTP_WORKERS: Final[int] = 4
+# (
+#    os.process_cpu_count()
+#    if hasattr(os, "process_cpu_count")
+#    else os.cpu_count()
+# ) or 1
 
 _MAX_CONNECT_RETRIES: Final[int] = 3
 _BASE_BACKOFF_SECONDS: Final[float] = 0.5
