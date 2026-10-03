@@ -1,9 +1,10 @@
 """Send attachments as separate emails (refactored)."""
 
 import asyncio
+import logging
 import os
 from email.message import EmailMessage
-from logging import DEBUG, INFO, Logger, basicConfig, getLogger
+from logging import DEBUG, INFO, Logger, getLogger
 from sys import argv as sys_argv
 from typing import Final
 
@@ -320,18 +321,20 @@ async def main() -> None:
 
 def setuplogger() -> None:
     """Configure application logging."""
-    logger.addFilter(thread_native_id_filter)
-    basicConfig(
-        level=DEBUG if __debug__ else INFO,
-        format=(
-            "%(asctime)s\t"
-            "%(levelname)s\t"
-            "PID %(process)d\t"
-            "ThID %(thread_native)d\t"
-            "%(message)s"
-        ),
+    log_fmt: str = (
+        "%(asctime)s\t"
+        "%(levelname)s\t"
+        "PID %(process)d\t"
+        "ThID %(thread_native)d\t"
+        "%(message)s"
     )
+    logger.addFilter(thread_native_id_filter)
+    handler = logging.StreamHandler()
+    # handler.setLevel(DEBUG if __debug__ else INFO)
+    handler.setFormatter(logging.Formatter(log_fmt))
+    logger.addHandler(handler)
+    logger.setLevel(DEBUG if __debug__ else INFO)
 
 
 if __name__ == "__main__":
-    asyncio.run(main(),debug=__debug__)
+    asyncio.run(main(), debug=__debug__)
