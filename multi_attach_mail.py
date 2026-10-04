@@ -82,8 +82,8 @@ async def create_message(
         logger.exception("Could not read attachment %s.", attachment_file)
         return None
     try:
-        if mime_type := guess_type(attachment_file.name):
-            _maintype, _subtype = mime_type[0].split("/", 1)
+        if mime_guess := guess_type(attachment_file.name)[0]:
+            _maintype, _subtype = mime_guess.split("/", 1)
     except Exception:
         logger.debug(
             "Could not determine MIME type for %s. "
