@@ -5,6 +5,7 @@ import asyncio
 import logging
 from email.message import EmailMessage
 from logging import DEBUG, INFO, Logger, getLogger
+from mimetypes import guess_type
 from sys import argv as sys_argv
 from typing import Final
 
@@ -72,23 +73,23 @@ async def create_message(
     logger.debug("Preparing attachment %s", attachment_file)
 
     try:
-        size = (await attachment_file.stat()).st_size
-    except FileNotFoundError:
-        logger.error("Attachment %s no longer exists.", attachment_file)
-        return None
-    except Exception:
-        logger.exception("Could not stat attachment %s.", attachment_file)
-        return None
-
-    try:
         payload = await attachment_file.read_bytes()
+        size = len(payload)
     except FileNotFoundError:
         logger.error("Attachment %s no longer exists.", attachment_file)
         return None
     except Exception:
         logger.exception("Could not read attachment %s.", attachment_file)
         return None
-
+    try:
+        if mime_type := guess_type(attachment_file.name):
+            _maintype, _subtype = mime_type[0].split("/", 1)
+    except Exception:
+        logger.debug(
+            "Could not determine MIME type for %s. "
+            "Using application/octet-stream.",
+            attachment_file,
+        )
     message = EmailMessage()
     message["From"] = sender
     message["To"] = recipient
