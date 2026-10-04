@@ -71,7 +71,7 @@ async def create_message(
 ) -> EmailMessage | None:
     """Create an email message containing one attachment."""
     logger.debug("Preparing attachment %s", attachment_file)
-
+    _maintype, _subtype = "application", "octet-stream"
     try:
         payload = await attachment_file.read_bytes()
         size = len(payload)
@@ -83,7 +83,7 @@ async def create_message(
         return None
     try:
         if mime_type := guess_type(attachment_file.name):
-            _maintype, _subtype = mime_type[0].split("/", 1)
+            _maintype, _subtype, _subtype = mime_type[0].split("/", 1)
     except Exception:
         logger.debug(
             "Could not determine MIME type for %s. "
@@ -99,8 +99,8 @@ async def create_message(
     )
     message.add_attachment(
         payload,
-        maintype="application",
-        subtype="octet-stream",
+        maintype=_maintype,
+        subtype=_subtype,
         filename=attachment_file.name,
     )
 
