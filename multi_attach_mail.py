@@ -322,19 +322,20 @@ async def main() -> None:
 
 def setuplogger() -> None:
     """Configure application logging."""
-    log_fmt: str = (
-        "%(asctime)s\t"
-        "%(levelname)s\t"
-        "PID %(process)d\t"
-        "ThID %(thread_native)d\t"
-        "%(message)s"
-    )
-    logger.addFilter(thread_native_id_filter)
-    handler = logging.StreamHandler()
-    # handler.setLevel(DEBUG if __debug__ else INFO)
-    handler.setFormatter(logging.Formatter(log_fmt))
-    logger.addHandler(handler)
-    logger.setLevel(DEBUG if __debug__ else INFO)
+    if not logger.handlers:
+        log_fmt: str = (
+            "%(asctime)s\t"
+            "%(levelname)s\t"
+            "PID %(process)d\t"
+            "ThID %(thread_native)d\t"
+            "%(message)s"
+        )
+        logger.addFilter(thread_native_id_filter)
+        handler = logging.StreamHandler()
+        # handler.setLevel(DEBUG if __debug__ else INFO)
+        handler.setFormatter(logging.Formatter(log_fmt))
+        logger.addHandler(handler)
+        logger.setLevel(DEBUG if __debug__ else INFO)
 
 
 if __name__ == "__main__":
