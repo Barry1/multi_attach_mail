@@ -83,7 +83,7 @@ async def create_message(
         return None
     try:
         if mime_type := guess_type(attachment_file.name):
-            _maintype, _subtype, _subtype = mime_type[0].split("/", 1)
+            _maintype, _subtype = mime_type[0].split("/", 1)
     except Exception:
         logger.debug(
             "Could not determine MIME type for %s. "
