@@ -2,6 +2,11 @@
 NUMCPUS = $(shell getconf _NPROCESSORS_ONLN)
 MAKEFLAGS += --always-make --jobs $(shell echo $$((2*$(NUMCPUS)))) --max-load=$(NUMCPUS) --output-sync=target --keep-going
 
+normalize:
+	poetry run isort --profile=black multi_attach_mail.py
+	poetry run ruff format multi_attach_mail.py
+	poetry run ruff check multi_attach_mail.py --fix
+
 pyupgrade:
 	poetry run pyupgrade --py313-plus multi_attach_mail.py
 
